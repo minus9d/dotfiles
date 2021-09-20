@@ -1,6 +1,6 @@
 ;;; init.el
 
-;; 参考文献
+;; 主要参考文献
 ;;   - https://emacs-jp.github.io/tips/emacs-in-2020
 ;;       - 大部分はこの設定を真似している
 ;;   - Emacs実践入門
@@ -33,7 +33,7 @@
 
 ;;; Code:
 
-;;; https://emacs-jp.github.io/tips/emacs-in-2020
+;; https://emacs-jp.github.io/tips/emacs-in-2020
 (eval-and-compile
   (when (or load-file-name byte-compile-current-file)
     (setq user-emacs-directory
@@ -349,7 +349,38 @@
   )
 
 
+
 ;;; 以下、leafを使わない設定
+
+;;;;;;;;;;;;;;;;;;;
+;; anaconda mode ;;
+;;;;;;;;;;;;;;;;;;;
+
+;; https://gist.github.com/yiufung/d8216038252f0488198e8b6af1e2ece4
+;; 事前にuse-packageのインストールが必要
+
+(use-package anaconda-mode
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  ;;(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  )
+(use-package company-anaconda
+  :ensure t
+  :init (require 'rx)
+  :after (company)
+  :config
+  (add-to-list 'company-backends 'company-anaconda)
+  )
+(use-package company-quickhelp
+  ;; Quickhelp may incorrectly place tooltip towards end of buffer
+  ;; See: https://github.com/expez/company-quickhelp/issues/72
+  :ensure t
+  :config
+  (company-quickhelp-mode)
+  )
+
+
 
 
 ;;;;;;;;;;;;;;;;
