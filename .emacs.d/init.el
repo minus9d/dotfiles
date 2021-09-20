@@ -315,7 +315,7 @@
 ;; 事前作成したテンプレートの挿入
 ;; https://higepon.hatenablog.com/entry/20080731/1217491155
 
-(setq auto-insert-directory "~/dropbox/Config/_emacs.d/lisp")
+(setq auto-insert-directory "~/.emacs.d/templates")
 
 (require 'autoinsert)
 ;; 各ファイルによってテンプレートを切り替える
