@@ -388,36 +388,26 @@
 ;;;;;;;;;;;;;;;;
 
 ;; 事前作成したテンプレートの挿入
+
+;; 以前は
 ;; https://higepon.hatenablog.com/entry/20080731/1217491155
+;; に従っていたが、より低機能な以下に変更
 
-(setq auto-insert-directory "~/.emacs.d/templates")
+;; http://howardism.org/Technical/Emacs/templates-tutorial.html
+(use-package autoinsert
+  :init
+  ;; Don't want to be prompted before insertion:
+  (setq auto-insert-query nil)
 
-(require 'autoinsert)
-;; 各ファイルによってテンプレートを切り替える
-(setq auto-insert-alist
-      (nconc '(
-               ("\\.cpp$" . ["template.cpp" my-template])
-               ("\\.h$"   . ["template.h" my-template])
-               ("\\.py$" .  ["template.py" my-template])
-               ) auto-insert-alist))
-(require 'cl)
+  (setq auto-insert-directory (locate-user-emacs-file "templates"))
+  (add-hook 'find-file-hook 'auto-insert)
+  (auto-insert-mode 1)
 
-;; ここが腕の見せ所
-(defvar template-replacements-alists
-  '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
-    ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
-    ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+  :config
+  (define-auto-insert "\\.cpp$" "template.cpp")
+  (define-auto-insert "\\.py$" "template.py"))
 
-(defun my-template ()
-  (time-stamp)
-  (mapc #'(lambda(c)
-        (progn
-          (goto-char (point-min))
-          (replace-string (car c) (funcall (cdr c)) nil)))
-    template-replacements-alists)
-  (goto-char (point-max))
-  (message "done."))
-(add-hook 'find-file-not-found-hooks 'auto-insert)
+
 
 
 ;;;;;;;;;;;;;;
