@@ -449,10 +449,12 @@
 (setq-default tab-width 4)
 ;; カーソル行を目立たせる
 ;; http://ergoemacs.org/emacs/emacs_high_light_current_line.html
-(global-hl-line-mode 1)
+;; (global-hl-line-mode 1)
 ;; テーマを設定
+(load-theme 'misterioso t)
 ;; あらかじめpackageからzenburn-themeのインストールが必要
-(load-theme 'zenburn t)
+;; (load-theme 'zenburn t)
+
 
 ;;;;;;;;;;;;;;;;
 ;; 雑多な設定 ;;
@@ -461,7 +463,7 @@
 ;; C-x C-bでlist-buffersのリッチ版が開くようにする
 ;; (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key (kbd "C-x C-b") 'bs-show)
-;; M-g gでも可能
+;; goto. M-g gでも可能
 (global-set-key (kbd "C-c g") 'goto-line)
 ;; 行の折り返しを切り替え
 (global-set-key (kbd "C-c l") 'toggle-truncate-lines)
