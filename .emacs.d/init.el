@@ -33,6 +33,7 @@
 
 ;;; Code:
 
+;;; leafの初期化コード
 ;; https://emacs-jp.github.io/tips/emacs-in-2020
 (eval-and-compile
   (when (or load-file-name byte-compile-current-file)
@@ -69,6 +70,7 @@
 ;; cus-edit.c
 ;; leafの :customで設定するとinit.elにcustomが勝手に設定を追記する
 ;; この状況になると、変数の二重管理になってしまうので、customがinit.elに追記しないように設定
+;; 詳細: https://qiita.com/conao3/items/347d7e472afd0c58fbd7
 (leaf cus-edit
   :doc "tools for customizing Emacs and Lisp packages"
   :tag "builtin" "faces" "help"
@@ -313,7 +315,7 @@
 ;; TODO: yasnippet-snippets によるスニペットダウンロードに失敗する
 ;; ようなので、https://github.com/AndreaCrotti/yasnippet-snippets
 ;; から取得したファイルを~/.emacs.d/snippetsに手動で配置
-
+;; TODO: company-mode/backend-with-yas の箇所でバイトコンパイルに失敗
 (leaf yasnippet
   :ensure t
   :blackout yas-minor-mode
