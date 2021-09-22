@@ -332,10 +332,6 @@
           ("C-c y g" . yas-reload-all)))
   :config
   (leaf yasnippet-snippets :ensure t)
-  (leaf yatemplate
-    :ensure t
-    :config
-    (yatemplate-fill-alist))
   (defvar company-mode/enable-yas t
     "Enable yasnippet for all backends.")
   (defun company-mode/backend-with-yas (backend)
