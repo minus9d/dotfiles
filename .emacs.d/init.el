@@ -33,7 +33,10 @@
 
 ;;; Code:
 
-;;; leafの初期化コード
+;;;;;;;;;;;;;;;;;;;;
+;;; leafの初期化 ;;;
+;;;;;;;;;;;;;;;;;;;;
+
 ;; https://emacs-jp.github.io/tips/emacs-in-2020
 (eval-and-compile
   (when (or load-file-name byte-compile-current-file)
@@ -63,11 +66,7 @@
     ;; initialize leaf-keywords.el
     (leaf-keywords-init)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Emacsの標準添付パッケージの設定 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; cus-edit.c
+;;; cus-edit.c
 ;; leafの :customで設定するとinit.elにcustomが勝手に設定を追記する
 ;; この状況になると、変数の二重管理になってしまうので、customがinit.elに追記しないように設定
 ;; 詳細: https://qiita.com/conao3/items/347d7e472afd0c58fbd7
@@ -172,16 +171,13 @@
   :tag "builtin" "internal"
   :custom `((auto-save-list-file-prefix . ,(locate-user-emacs-file "backup/.saves-"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ELPA, MELPAなどから取得したパッケージの設定 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; leafによる個別設定 ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;
-;; ivy ;;
-;;;;;;;;;
-
+;;; ivy + swiper + counsel
 ;; ミニバッファの補完を強化
-
+;; https://emacs-jp.github.io/tips/emacs-in-2020
 (leaf ivy
   :doc "Incremental Vertical completYon"
   :req "emacs-24.5"
@@ -240,10 +236,7 @@
   :global-minor-mode t)
 
 
-;;;;;;;;;;;;;;
-;; flycheck ;;
-;;;;;;;;;;;;;;
-
+;;; flycheck
 ;; リアルタイムにソースのエラーやワーニングを表示するマイナーモード
 ;; C-c ! l でエラーリストを表示
 ;;
@@ -264,12 +257,8 @@
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
 
-;;;;;;;;;;;;;
-;; company ;;
-;;;;;;;;;;;;;
-
+;;; company
 ;; 入力補完のためのパッケージ
-
 (leaf company
   :doc "Modular text completion framework"
   :req "emacs-24.3"
@@ -307,10 +296,7 @@
   (add-to-list 'company-backends 'company-c-headers))
 
 
-;;;;;;;;;;;;;;;
-;; yasnippet ;;
-;;;;;;;;;;;;;;;
-
+;;; yasnippet
 ;; https://mako-note.com/python-emacs-ide/#yasnippet
 ;; TODO: yasnippet-snippets によるスニペットダウンロードに失敗する
 ;; ようなので、https://github.com/AndreaCrotti/yasnippet-snippets
@@ -346,17 +332,13 @@
   ((company-mode-hook . set-yas-as-company-backend))
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; use-packageによる個別設定 ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;;; 以下、leafを使わない設定
-
-;;;;;;;;;;;;;;;;;;;
-;; anaconda mode ;;
-;;;;;;;;;;;;;;;;;;;
-
+;;; anaconda mode
 ;; https://gist.github.com/yiufung/d8216038252f0488198e8b6af1e2ece4
 ;; 事前にuse-packageのインストールが必要
-
 (use-package anaconda-mode
   :ensure t
   :config
@@ -379,18 +361,11 @@
   )
 
 
-
-
-;;;;;;;;;;;;;;;;
-;; autoinsert ;;
-;;;;;;;;;;;;;;;;
-
+;;; autoinsert
 ;; 事前作成したテンプレートの挿入
-
 ;; 以前は
 ;; https://higepon.hatenablog.com/entry/20080731/1217491155
 ;; に従っていたが、より低機能な以下に変更
-
 ;; http://howardism.org/Technical/Emacs/templates-tutorial.html
 (use-package autoinsert
   :init
@@ -406,24 +381,33 @@
   (define-auto-insert "\\.py$" "template.py"))
 
 
+;;; markdown mode
+;; https://jblevins.org/projects/markdown-mode/
+;; C-c C-c pでプレビューを開く (pandoc必要)
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+;; pandocの場所を指定
+;; https://stackoverflow.com/questions/14231043/emacs-markdown-mode-error-on-preview-bin-bash-markdown-command-not-found/19589576
+(custom-set-variables '
+(markdown-command "/cygdrive/c/ProgramData/Anaconda3/Scripts/pandoc"))
 
 
-;;;;;;;;;;;;;;
-;; フォント ;;
-;;;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;; 表示 ;;;
+;;;;;;;;;;;;
 
+;;; font
 ;; 「Emacs実践入門」より
-
 (set-fontset-font
  nil 'japanese-jisx0208
  (font-spec :family "Myrica M"))
 ;; 半角:全角 = 1:2に
 (add-to-list 'face-font-rescale-alist '(".*Myrica.*" . 1.2))
-
-
-;;;;;;;;;;
-;; 表示 ;;
-;;;;;;;;;;
 
 ;; 列番号を表示
 (column-number-mode 1)
@@ -444,9 +428,9 @@
 ;; (load-theme 'zenburn t)
 
 
-;;;;;;;;;;;;;;;;
-;; 雑多な設定 ;;
-;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;
+;;; misc ;;;
+;;;;;;;;;;;;
 
 ;; C-x C-bでlist-buffersのリッチ版が開くようにする
 ;; (global-set-key "\C-x\C-b" 'electric-buffer-list)
@@ -465,7 +449,7 @@
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 ;; カーソル位置にあるElisp関数や変数の情報をエコーエリアへ表示
-;; cf. 書籍「Emacs実践入門」
+;; 「Emacs実践入門」より
 (defun elisp-mode-hooks ()
   "Lisp-mode-hooks."
   (when (require 'eldoc nil t)
@@ -476,6 +460,7 @@
 
 ;; 日本語の言語設定をしたあと、UTF-8の優先順位を最大にする
 ;; 現在の設定はM-x describe-current-coding-systemで確認
+;; 「Emacs実践入門」より
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
