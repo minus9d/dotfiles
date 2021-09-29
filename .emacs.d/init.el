@@ -296,6 +296,14 @@
   (add-to-list 'company-backends 'company-c-headers))
 
 
+;;; magit
+;; C-x gでmagitを開く
+;; ?でヘルプ
+(leaf magit
+  :bind (("C-x g" . magit-status))
+  :ensure t
+)
+
 ;;; yasnippet
 ;; https://mako-note.com/python-emacs-ide/#yasnippet
 ;; TODO: yasnippet-snippets によるスニペットダウンロードに失敗する
