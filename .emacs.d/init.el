@@ -344,6 +344,12 @@
 ;;; use-packageによる個別設定 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; use-packageをインストール
+;; https://emacs.stackexchange.com/questions/28932/how-to-automate-installation-of-packages-with-emacs-file
+(dolist (package '(use-package))
+  (unless (package-installed-p package)
+           (package-install package)))
+
 ;;; anaconda mode
 ;; https://gist.github.com/yiufung/d8216038252f0488198e8b6af1e2ece4
 ;; 事前にuse-packageのインストールが必要
